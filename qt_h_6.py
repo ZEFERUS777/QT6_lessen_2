@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QApplication, QWidget, QLCDNumber, QSpinBox, QListWidget, QLabel, QPushButton, QLineEdit
 import sys
-
+import random
 
 
 class Pseudonym(QWidget):
@@ -24,13 +24,25 @@ class Pseudonym(QWidget):
         self.takeInput = QLineEdit(self)
         self.takeInput.move(150, 83)
         self.takeInput.resize(339, 20)
+        self.takeButton = QPushButton('Взять', self)
+        self.takeButton.move(15, 110)
+        self.takeButton.resize(473, 20)
+        self.takeButton.clicked.connect(self.take)
         self.listWidget = QListWidget(self)
-        self.listWidget.move(15, 111)
+        self.listWidget.move(15, 140)
         self.listWidget.resize(473, 200)
 
     def start(self):
+        self.listWidget.clear()
         self.remainLcd.display(self.stones.value())
-        count_stones = self.stones.value()
+
+    def take(self):
+        rnd = random.randint(1, 3)
+        self.remainLcd.display(self.remainLcd.value() - int(self.takeInput.text()) - rnd)
+        self.listWidget.addItem(f'Игрок взял - {self.takeInput.text()}')
+        self.listWidget.addItem(f'Компьютер взял - {rnd}')
+
+
 
 
 if __name__ == '__main__':
