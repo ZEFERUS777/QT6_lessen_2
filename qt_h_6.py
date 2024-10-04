@@ -31,22 +31,37 @@ class Pseudonym(QWidget):
         self.listWidget = QListWidget(self)
         self.listWidget.move(15, 140)
         self.listWidget.resize(473, 200)
+        self.resultLabel = QLabel(self)
+        self.resultLabel.move(250, 355)
 
     def start(self):
         self.listWidget.clear()
         self.remainLcd.display(self.stones.value())
+        self.resultLabel.setText('')  # Clear win message on start
 
     def take(self):
-        rnd = random.randint(1, 3)
-        self.remainLcd.display(self.remainLcd.value() - int(self.takeInput.text()) - rnd)
-        self.listWidget.addItem(f'Игрок взял - {self.takeInput.text()}')
-        self.listWidget.addItem(f'Компьютер взял - {rnd}')
-
-
+        val = self.remainLcd.value()
+        if val > 0:
+            take_amount = int(self.takeInput.text() or 0)
+            if 0 < take_amount <= val:
+                val -= take_amount
+                self.remainLcd.display(val)
+                self.listWidget.addItem(f'Игрок взял - {take_amount}')
+                if val <= 0:
+                    self.resultLabel.setText('Выиграл игрок')
+                else:
+                    rnd = random.randint(1, min(1, val))  # Corrected random choice
+                    val -= rnd
+                    self.remainLcd.display(val)
+                    self.listWidget.addItem(f'Компьютер взял - {rnd}')
+                    if val <= 0:
+                        self.resultLabel.setText('Выиграл компьютер')
+            else:
+                self.listWidget.addItem('Некорректное количество камней для взятия.')
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    widget = Pseudonym()
-    widget.show()
+    window = Pseudonym()
+    window.show()
     sys.exit(app.exec())
