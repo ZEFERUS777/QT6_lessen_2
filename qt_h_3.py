@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QWidget, QApplication, QTimeEdit, QCalendarWidget, Q
 class SimplePlanner(QWidget):
     def __init__(self):
         super().__init__()
-        self.setGeometry(300, 300, 600, 600)
+        self.setGeometry(300, 300, 600, 500)
         self.setWindowTitle('Мини планировщик')
         self.timeEdit = QTimeEdit(self)
         self.timeEdit.setGeometry(100, 100, 200, 200)
@@ -37,6 +37,11 @@ class SimplePlanner(QWidget):
         self.eventList = QListWidget(self)
         self.eventList.move(330, 0)
         self.eventList.resize(265, 485)
+
+    def addEvent(self):
+        selected_data = self.calendarWidget.selectedDate()
+        self.eventList.addItem(
+            f"{selected_data.toString('dd-MM-yyyy')} 00:{self.timeEdit.text()} - {self.task_inp.text()}")
 
 
 if __name__ == '__main__':
