@@ -32,7 +32,8 @@ class Pseudonym(QWidget):
         self.listWidget.move(15, 140)
         self.listWidget.resize(473, 200)
         self.resultLabel = QLabel(self)
-        self.resultLabel.move(250, 355)
+        self.resultLabel.move(200, 355)
+        self.resultLabel.setFixedWidth(500)
 
     def start(self):
         self.listWidget.clear()
