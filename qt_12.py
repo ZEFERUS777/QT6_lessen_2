@@ -51,6 +51,7 @@ class FlagMaker(QWidget):
 
         self.result = QLabel(self)
         self.result.move(10, 150)
+        self.result.setFixedWidth(500)
         self.result.setMaximumSize(400, 200)
 
         self.btn_1_lay.addWidget(QLabel('\t', self))
