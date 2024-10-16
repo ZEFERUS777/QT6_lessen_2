@@ -1,77 +1,93 @@
 import sys
-
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog, \
+    QGroupBox
+from PyQt6.QtGui import QImage, QPixmap, QTransform
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QImage, QPixmap
-from PyQt6.QtWidgets import QMainWindow, QLabel, QFileDialog, QApplication, QButtonGroup, QPushButton, QHBoxLayout, \
-    QVBoxLayout
 
 
 class MyPillow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setGeometry(300, 300, 500, 500)
 
-        self.file = QFileDialog()
-        self.file.adjustSize()  # to fit the window
-        self.curr_image = QImage(self.file.getOpenFileName(self, "Open Image", "", "Images (*.png *.jpg *.bmp)")[0])
-        self.pixmap = QPixmap.fromImage(self.curr_image)
-        self.resized_pix = self.pixmap.scaled(280, 270)
-        self.lbl_image = QLabel(self)
-        self.lbl_image.setPixmap(self.resized_pix)
-        self.channelButtons = QButtonGroup(self)
-        self.red_color_btn = QPushButton("R", self)
-        self.green_color_btn = QPushButton("G", self)
-        self.blue_color_btn = QPushButton("B", self)
+        self.setWindowTitle("MyPillow")
+        self.curr_image = None
 
-        self.channelButtons.addButton(self.red_color_btn)
-        self.channelButtons.addButton(self.green_color_btn)
-        self.channelButtons.addButton(self.blue_color_btn)
+        # Create layout
+        main_layout = QVBoxLayout()
+        self.central_widget = QLabel()
+        main_layout.addWidget(self.central_widget)
 
-        self.red_color_btn.move(10, 50)
-        self.green_color_btn.move(10, self.red_color_btn.y() + self.red_color_btn.height() + 50)
-        self.blue_color_btn.move(10, self.green_color_btn.y() + self.green_color_btn.height() + 50)
+        # Create channel buttons
+        channel_buttons_layout = QHBoxLayout()
+        channel_buttons_group = QGroupBox("channelButtons")
+        red_button = QPushButton("Red")
+        green_button = QPushButton("Green")
+        blue_button = QPushButton("Blue")
+        channel_buttons_layout.addWidget(red_button)
+        channel_buttons_layout.addWidget(green_button)
+        channel_buttons_layout.addWidget(blue_button)
+        channel_buttons_group.setLayout(channel_buttons_layout)
+        main_layout.addWidget(channel_buttons_group)
 
-        self.red_color_btn.resize(150, 25)
-        self.green_color_btn.resize(150, 25)
-        self.blue_color_btn.resize(150, 25)
+        # Create rotate buttons
+        rotate_buttons_layout = QHBoxLayout()
+        rotate_buttons_group = QGroupBox("rotateButtons")
+        rotate_left_button = QPushButton("Left")
+        rotate_right_button = QPushButton("Right")
+        rotate_buttons_layout.addWidget(rotate_left_button)
+        rotate_buttons_layout.addWidget(rotate_right_button)
+        rotate_buttons_group.setLayout(rotate_buttons_layout)
+        main_layout.addWidget(rotate_buttons_group)
 
-        self.lbl_image.move(self.red_color_btn.x() + 200, self.red_color_btn.y() - 20)
-        self.lbl_image.resize(280, 270)
+        self.central_widget.setLayout(main_layout)
 
-        self.rotateButtons = QButtonGroup(self)
+        # Connect button clicks to functions
+        red_button.clicked.connect(self.show_red_channel)
+        green_button.clicked.connect(self.show_green_channel)
+        blue_button.clicked.connect(self.show_blue_channel)
+        rotate_left_button.clicked.connect(self.rotate_left)
+        rotate_right_button.clicked.connect(self.rotate_right)
 
-        self.rotate_btn = QPushButton("По часовой стрелке", self)
-        self.rotate_btn.resize(200, 25)
-        self.rotateButtons.addButton(self.rotate_btn)
+        # Open file dialog to choose image
+        self.load_image()
 
-        self.rotate_btn.move(10, self.green_color_btn.y() + self.green_color_btn.height() + 180)
+    def load_image(self):
+        file_dialog = QFileDialog()
+        file_dialog.setFileMode(QFileDialog.FileMode.ExistingFile)
+        if file_dialog.exec():
+            file_path = file_dialog.selectedFiles()[0]
+            self.curr_image = QImage(file_path)
+            self.central_widget.setPixmap(QPixmap.fromImage(self.curr_image))
 
-        self.rotate_2_btn = QPushButton("Против часовой стрелке", self)
-        self.rotate_2_btn.resize(200, 25)
-        self.rotateButtons.addButton(self.rotate_2_btn)
-        self.rotate_2_btn.move(self.rotate_btn.x() + self.rotate_btn.width() + 10, self.rotate_btn.y())
-
-        self.red_color_btn.clicked.connect(lambda checked, c='red': self.change_channel(c))
-        self.green_color_btn.clicked.connect(lambda: self.change_channel(Qt.GlobalColor.green))
-        self.blue_color_btn.clicked.connect(lambda: self.change_channel(Qt.GlobalColor.blue))
-
-    def change_channel(self, color):
+    def show_red_channel(self):
         if self.curr_image:
-            img = self.curr_image.copy()
-            for c in [Qt.GlobalColor.red, Qt.GlobalColor.green, Qt.GlobalColor.blue]:
-                img.setColor(c, 0 if c != color else 255)
-            self.curr_image = img
-            self.update_image()
+            self.central_widget.setPixmap(QPixmap.fromImage(self.curr_image.createHeuristicMask()))
 
-    def update_image(self):
+    def show_green_channel(self):
         if self.curr_image:
-            pixmap = QPixmap.fromImage(self.curr_image)
-            self.lbl_image.setPixmap(pixmap.scaled(self.lbl_image.size(), Qt.AspectRatioMode.KeepAspectRatio))
+            self.central_widget.setPixmap(QPixmap.fromImage(self.curr_image.createAlphaMask()))
+
+    def show_blue_channel(self):
+        if self.curr_image:
+            self.central_widget.setPixmap(QPixmap.fromImage(self.curr_image.createHeuristicMask()))
+
+    def rotate_left(self):
+        if self.curr_image:
+            transform = QTransform()
+            transform.rotate(-90)
+            self.curr_image = self.curr_image.transformed(transform)
+            self.central_widget.setPixmap(QPixmap.fromImage(self.curr_image))
+
+    def rotate_right(self):
+        if self.curr_image:
+            transform = QTransform()
+            transform.rotate(90)
+            self.curr_image = self.curr_image.transformed(transform)
+            self.central_widget.setPixmap(QPixmap.fromImage(self.curr_image))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MyPillow()
     window.show()
     sys.exit(app.exec())
-
