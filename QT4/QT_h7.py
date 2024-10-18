@@ -24,8 +24,8 @@ class Suffle(QWidget):
         even_lines = [value for idx, value in enumerate(file) if idx % 2 == 0]
         odd_lines = [value for idx, value in enumerate(file) if idx % 2 != 0]
 
-        self.text_field.append('\n'.join(even_lines))
-        self.text_field.append('\n'.join(odd_lines))
+        self.text_field.append(''.join(even_lines))
+        self.text_field.append(''.join(odd_lines))
 
 
 if __name__ == '__main__':
