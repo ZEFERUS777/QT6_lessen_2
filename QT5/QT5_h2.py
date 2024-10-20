@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLin
 class Square1(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.coord = []
         self.setGeometry(300, 300, 800, 900)
         self.btn = QPushButton('Show', self)
         self.btn.move(15, 15)
@@ -37,35 +38,28 @@ class Square1(QMainWindow):
         self.color = QColor(255, 255, 255)
 
         self.do_paint = False
-
         self.btn.clicked.connect(self.paint)
-
-    def paintEvent(self, event):
-        if self.do_paint:
-            qp = QPainter()
-            qp.begin(self)
-            self.drawrect(qp)
-            qp.end()
-        self.do_paint = False
-
-    def drawrect(self, qp: QPainter):
-        self.n = int(self.lineEdit3.text()) if self.lineEdit3.text() != '' else self.n
-        self.a = int(self.lineEdit.text()) if self.lineEdit.text() != '' else self.a
-        self.k = float(self.lineEdit2.text()) if self.lineEdit2.text() != '' else self.k
-
-        qp.setBrush(self.color)
-        qp.setPen(QColor(255, 0, 0))
-        self.cord_x, self.cord_y = 40, 200
-        for i in range(self.n):
-            qp.drawRect(QRectF(50, 200, self.a, self.a))
-            self.cord_x += 20
-            self.cord_y += 20
-            self.a = self.a * self.k  # The size of the next square
 
     def paint(self):
         self.do_paint = True
         self.update()
 
+    def paintEvent(self, event):
+        if self.do_paint:
+            self.qp = QPainter()
+            self.qp.begin(self)
+            self.draw_square(self.qp)
+            self.qp.end()
+
+    def draw_square(self, qp: QPainter):
+        self.a = int(self.lineEdit.text()) if self.lineEdit.text() else 300
+        self.k = float(self.lineEdit2.text()) if self.lineEdit2.text() else 0.9
+        self.n = int(self.lineEdit3.text()) if self.lineEdit3.text() else 10
+        self.coord = [100, 200, self.a, 250]
+        qp.setBrush(QColor(255, 255, 255))  # White
+        qp.setPen(QColor(255, 0, 0))  # Red
+        for i in range(self.n):
+            qp.drawRect(QRectF(self.coord[0], self.coord[1], self.coord[2], self.coord[3]))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

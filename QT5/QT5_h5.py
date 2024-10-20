@@ -34,8 +34,8 @@ class RandomFlag(QMainWindow):
             self.draw_flag(qp)
 
     def draw_flag(self, qp):
-        colors = [QColor(random.randrange(0, 255), random.randrange(0, 255), random.randrange(0, 255)) for _ in
-                  range(self.num)]
+        colors = [QColor(random.randrange(0, 255), random.randrange(0, 255),
+                         random.randrange(0, 255)) for _ in range(self.num)]
         qp.setBrush(QColor(255, 255, 255))
         for i in range(self.num):
             qp.setBrush(colors[i])
