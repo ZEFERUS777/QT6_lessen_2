@@ -61,6 +61,7 @@ class Square1(QMainWindow):
         for i in range(self.n):
             qp.drawRect(QRectF(self.coord[0], self.coord[1], self.coord[2], self.coord[3]))
 
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = Square1()
