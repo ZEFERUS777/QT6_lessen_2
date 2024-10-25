@@ -1,7 +1,8 @@
 import sys
 
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QLineEdit, QPushButton, QListWidget, QInputDialog
+from PyQt6.QtWidgets import QMainWindow, QApplication, QLabel, QLineEdit, QPushButton, QListWidget, QInputDialog, \
+    QFileDialog
 
 
 class administrator_LMS(QMainWindow):
@@ -39,11 +40,18 @@ class administrator_LMS(QMainWindow):
 
         self.units_list_ui = QListWidget(self)
         self.units_list_ui.move(self.save_all_units_btn.x(),
-                                self.save_all_units_btn.y() + 10 + self.save_all_units_btn.height())
+                                self.save_all_units_btn.y() + 40 + self.save_all_units_btn.height())
         self.units_list_ui.resize(self.save_all_units_btn.width(), self.save_all_units_btn.height())
 
         self.add_unit.clicked.connect(self.add_unit_to_list)
         self.save_all_units_btn.clicked.connect(self.save_all_units)
+
+        self.import_base_btn = QPushButton('Импортировать базу', self)
+        self.import_base_btn.move(self.save_all_units_btn.x(),
+                                  self.save_all_units_btn.y() + self.save_all_units_btn.height() + 10)
+        self.import_base_btn.resize(self.save_all_units_btn.size())
+
+        self.import_base_btn.clicked.connect(self.import_base)
 
     def add_unit_to_list(self):
         try:
@@ -60,6 +68,16 @@ class administrator_LMS(QMainWindow):
                 for unit in self.units_list:
                     unit = unit.split(' ')
                     file.write(f'Имя ученика: {unit[0]} Название кружка: {unit[1]}\n')
+
+    def import_base(self):
+        inp_file = QFileDialog.getOpenFileName(self, 'Выберите файл', '', 'Текстовые файлы (*.txt)')[0]
+
+        with open(inp_file, 'r', encoding='utf-8') as file:
+            lines = file.readlines()
+        for line in lines:
+            line = line.replace('\n', '').split(' ')
+            self.units_list_ui.addItem(f'{line[2]}: {line[-1]}')
+            self.units_list_ui.resize(self.save_all_units_btn.width(), self.units_list_ui.height() + 15)
 
 
 if __name__ == '__main__':
