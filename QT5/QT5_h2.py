@@ -55,11 +55,13 @@ class Square1(QMainWindow):
         self.a = int(self.lineEdit.text()) if self.lineEdit.text() else 300
         self.k = float(self.lineEdit2.text()) if self.lineEdit2.text() else 0.9
         self.n = int(self.lineEdit3.text()) if self.lineEdit3.text() else 10
-        self.coord = [100, 200, self.a, 250]
-        qp.setBrush(QColor(255, 255, 255))  # White
-        qp.setPen(QColor(255, 0, 0))  # Red
+        color = QColor(255, 0, 0)
+        self.coords = 40, 250
+        self.qp.setBrush(QColor(0, 0, 0))
+        self.qp.setPen(color)
         for i in range(self.n):
-            qp.drawRect(QRectF(self.coord[0], self.coord[1], self.coord[2], self.coord[3]))
+            qp.drawRect(QRectF(self.coords[0], self.coords[1], self.a, self.a))
+            self.a = int(self.a - 1 * self.k)
 
 
 if __name__ == "__main__":
