@@ -2,7 +2,7 @@ import sys
 
 from PyQt6.QtCore import QRectF
 from PyQt6.QtGui import QPainter, QColor
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit, QMessageBox
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QLineEdit
 
 
 class Square1(QMainWindow):
@@ -10,7 +10,7 @@ class Square1(QMainWindow):
         super().__init__()
         self.coord = []
         self.setGeometry(300, 300, 800, 900)
-        self.btn = QPushButton('Show', self)
+        self.btn = QPushButton('Показать', self)
         self.btn.move(15, 15)
 
         self.a = 300  # Size of the side of the largest square
@@ -19,7 +19,7 @@ class Square1(QMainWindow):
 
         self.lbl_s = QLabel('Side:', self)
         self.lbl_s.move(self.btn.x() + self.btn.width() + 70, self.btn.y())
-        self.coeff_lbl = QLabel('Coeff', self)
+        self.coeff_lbl = QLabel('Coeff:', self)
         self.coeff_lbl.move(self.lbl_s.x(), self.lbl_s.y() + 30)
         self.n_lbl = QLabel('N', self)
         self.n_lbl.move(self.coeff_lbl.x(), self.coeff_lbl.y() + 30)
@@ -56,12 +56,24 @@ class Square1(QMainWindow):
         self.k = float(self.lineEdit2.text()) if self.lineEdit2.text() else 0.9
         self.n = int(self.lineEdit3.text()) if self.lineEdit3.text() else 10
         color = QColor(255, 0, 0)
-        self.coords = 40, 250
+        xs = 50
+        self.coords = xs, 130
         self.qp.setBrush(QColor(0, 0, 0))
         self.qp.setPen(color)
+        rectangle_center = None
+        count = 0
         for i in range(self.n):
-            qp.drawRect(QRectF(self.coords[0], self.coords[1], self.a, self.a))
-            self.a = int(self.a - 1 * self.k)
+            if count == 0:
+                rectangle = QRectF(self.coords[0], self.coords[1], self.a, self.a)
+                rectangle_center = rectangle.center()
+                qp.drawRect(rectangle)
+                count += 1
+                self.a = self.a * self.k
+            else:
+                rectangle = QRectF(rectangle_center.x() - self.a / 2, rectangle_center.y() - self.a / 2,
+                                   self.a, self.a)
+                qp.drawRect(rectangle)
+                self.a = self.a * self.k
 
 
 if __name__ == "__main__":
