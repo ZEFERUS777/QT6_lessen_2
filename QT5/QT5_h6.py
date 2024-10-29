@@ -10,7 +10,7 @@ class Square2(QMainWindow):
         super().__init__()
         self.setFixedSize(500, 500)
         self.k_lbl = QLabel('K =', self)
-        self.k_lbl.move(20, 25)
+        self.k_lbl.move(20, 10)
 
         self.k = QLineEdit(self)
         self.k.move(self.k_lbl.x() + 25, self.k_lbl.y() + 3)
@@ -41,17 +41,33 @@ class Square2(QMainWindow):
 
     def paintEvent(self, event):
         if self.painted:
-            qp = QPainter(self)
-            qp.begin(self)
-            self.draw_polygons(qp)
-            qp.end()
+            k_value = float(self.k.text()) if self.k.text() else 1
+            n_value = int(self.n.text()) if self.n.text().isdigit() else 0
+            if k_value < 1 and n_value > 0:
+                self.draw_polygons(k_value, n_value)
 
-    def draw_polygons(self, qp):
-        self.koff = float(self.k.text()) if self.k.text() else 0.8
-        self.rang = int(self.n.text()) if self.n.text() else 20
-        polygons = []
-        # Квадрат
-        
+    def draw_polygons(self, k_value, n_value):
+        base_size = 200
+        center = QPointF(150, 150)
+
+        def create_square(center, size):
+            half_size = size / 2
+            return QPolygonF([QPointF(center.x() - half_size, center.y() - half_size),
+                              QPointF(center.x() + half_size, center.y() - half_size),
+                              QPointF(center.x() + half_size, center.y() + half_size),
+                              QPointF(center.x() - half_size, center.y() + half_size)])
+
+        painter = QPainter(self)
+        painter.setPen(self.color)
+
+        size = base_size
+        for _ in range(n_value):
+            square = create_square(center, size)
+            painter.drawPolygon(square)
+            size *= k_value
+            center = QPointF(center.x(), center.y())
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = Square2()
