@@ -28,13 +28,13 @@ class Square1(QMainWindow):
         self.lineEdit.move(self.lbl_s.x() + 40, self.lbl_s.y())
         self.lineEdit.resize(100, 25)
 
-        self.lineEdit2 = QLineEdit(self)
-        self.lineEdit2.move(self.lineEdit.x(), self.coeff_lbl.y())
-        self.lineEdit2.resize(100, 25)
+        self.lineEdit_2 = QLineEdit(self)
+        self.lineEdit_2.move(self.lineEdit.x(), self.coeff_lbl.y())
+        self.lineEdit_2.resize(100, 25)
 
-        self.lineEdit3 = QLineEdit(self)
-        self.lineEdit3.move(self.lineEdit.x(), self.n_lbl.y())
-        self.lineEdit3.resize(100, 25)
+        self.lineEdit_3 = QLineEdit(self)
+        self.lineEdit_3.move(self.lineEdit.x(), self.n_lbl.y())
+        self.lineEdit_3.resize(100, 25)
         self.color = QColor(255, 255, 255)
 
         self.do_paint = False
@@ -53,8 +53,8 @@ class Square1(QMainWindow):
 
     def draw_square(self, qp: QPainter):
         self.a = int(self.lineEdit.text()) if self.lineEdit.text() else 300
-        self.k = float(self.lineEdit2.text()) if self.lineEdit2.text() else 0.9
-        self.n = int(self.lineEdit3.text()) if self.lineEdit3.text() else 10
+        self.k = float(self.lineEdit_2.text()) if self.lineEdit_2.text() else 0.9
+        self.n = int(self.lineEdit_3.text()) if self.lineEdit_3.text() else 10
         color = QColor(255, 0, 0)
         xs = 50
         self.coords = xs, 130
