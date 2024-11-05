@@ -37,35 +37,36 @@ class Square2(QMainWindow):
 
     def paint(self):
         self.painted = True
-        self.update()
+        self.repaint()
 
     def paintEvent(self, event):
         if self.painted:
-            k_value = float(self.k.text()) if self.k.text() else 1
-            n_value = int(self.n.text()) if self.n.text().isdigit() else 0
-            if k_value < 1 and n_value > 0:
-                self.draw_polygons(k_value, n_value)
-
-    def draw_polygons(self, k_value, n_value):
-        base_size = 200
-        center = QPointF(150, 150)
-
-        def create_square(center, size):
-            half_size = size / 2
-            return QPolygonF([QPointF(center.x() - half_size, center.y() - half_size),
-                              QPointF(center.x() + half_size, center.y() - half_size),
-                              QPointF(center.x() + half_size, center.y() + half_size),
-                              QPointF(center.x() - half_size, center.y() + half_size)])
-
-        painter = QPainter(self)
-        painter.setPen(self.color)
-
-        size = base_size
-        for _ in range(n_value):
-            square = create_square(center, size)
-            painter.drawPolygon(square)
-            size *= k_value
-            center = QPointF(center.x(), center.y())
+            qp = QPainter()
+            qp.begin(self)
+            qp.setPen(self.color)
+            coords = [
+                (150, 150),
+                (350, 150),
+                (350, 350),
+                (150, 350)
+            ]
+            n = int(self.n.text())
+            k = float(self.k.text())
+            for _ in range(n):
+                polygon = QPolygonF()
+                for point in coords:
+                    polygon.append(QPointF(point[0], point[1]))
+                qp.drawPolygon(polygon)
+                new_coords = []
+                for i in range(len(coords)):
+                    point = (
+                        k * coords[i][0] + (1 - k) * coords[(i + 1) % len(coords)][0],
+                        k * coords[i][1] + (1 - k) * coords[(i + 1) % len(coords)][1]
+                    )
+                    new_coords.append(point)
+                coords = new_coords
+            qp.end()
+            self.painted = False
 
 
 if __name__ == '__main__':
