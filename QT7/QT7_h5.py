@@ -67,7 +67,7 @@ class MyWidget(QMainWindow):
     def query_database(self):
         parameter = self.parameterSelection.currentText()
         search = self.queryLine.text()
-        conn = sqlite3.connect('films_db.sqlite')
+        conn = sqlite3.connect('../QT8/films_db.sqlite')
         curr = conn.cursor()
         result = None
         execute = None

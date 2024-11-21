@@ -7,7 +7,7 @@ class MyWidget(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.connector = sqlite3.connect('films_db.sqlite')
+        self.connector = sqlite3.connect('../QT8/films_db.sqlite')
         self.cursor = self.connector.cursor()
 
         self.cursor.execute("SELECT title FROM genres")
