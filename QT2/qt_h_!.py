@@ -6,7 +6,7 @@ from PyQt6 import uic
 class Calculator(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('calc.ui', self)
+        uic.loadUi('calc.uip', self)
         self.pushButtonEqual.clicked.connect(self.calculate)
         self.pushButtonClear.clicked.connect(self.clear)
 

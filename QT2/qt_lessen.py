@@ -94,7 +94,7 @@ class Canvas(QWidget):
 class Window(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('form.ui', self)
+        uic.loadUi('form.uip', self)
         self.setCentralWidget(Canvas())
         self.actionbrush: QAction
         self.actionline: QAction

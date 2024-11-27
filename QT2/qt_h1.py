@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QWidget, QApplication
 import math
 
 calc = """<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<uip version="4.0">
  <class>Form</class>
  <widget class="QWidget" name="Form">
   <property name="geometry">
@@ -593,7 +593,7 @@ calc = """<?xml version="1.0" encoding="UTF-8"?>
   <buttongroup name="buttonGroup_binary"/>
   <buttongroup name="buttonGroup_digits"/>
  </buttongroups>
-</ui>
+</uip>
 """
 
 
